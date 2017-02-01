@@ -23,4 +23,5 @@ func (m *Module) FlagHook() {
 func (m *Module) Attach(session *shodan.Shodan) {
 	session.GetCommandStack().RegisterCommand(&SpankmeCommand{})
 	session.GetCommandStack().RegisterCommand(&SpankCommand{})
+	session.GetCommandStack().RegisterCommand(&PetCommand{})
 }
