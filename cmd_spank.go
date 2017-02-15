@@ -2,12 +2,13 @@ package slutbot
 
 import (
 	"github.com/innovandalism/shodan"
+	"github.com/innovandalism/shodan/util"
 )
 
 type SpankCommand struct{}
 
-func (vc *SpankCommand) GetName() string {
-	return "spank"
+func (vc *SpankCommand) GetNames() []string {
+	return []string{"spank"}
 }
 
 func (vc *SpankCommand) Invoke(ci *shodan.CommandInvocation) bool {
@@ -19,6 +20,9 @@ func (vc *SpankCommand) Invoke(ci *shodan.CommandInvocation) bool {
 		return true
 	}
 	msg := GenerateSpank(target)
-	ci.Session.ChannelMessageSend(ci.Event.ChannelID, msg)
+	_, err := ci.Session.ChannelMessageSend(ci.Event.ChannelID, msg)
+	if err != nil {
+		util.ReportThreadError(false, err)
+	}
 	return true
 }

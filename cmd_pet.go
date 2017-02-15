@@ -3,12 +3,13 @@ package slutbot
 import (
 	"github.com/innovandalism/shodan"
 	"strings"
+	"github.com/innovandalism/shodan/util"
 )
 
 type PetCommand struct{}
 
-func (vc *PetCommand) GetName() string {
-	return "pet"
+func (vc *PetCommand) GetNames() []string {
+	return []string{"pet"}
 }
 
 func (vc *PetCommand) Invoke(ci *shodan.CommandInvocation) bool {
@@ -24,6 +25,9 @@ func (vc *PetCommand) Invoke(ci *shodan.CommandInvocation) bool {
 		return true
 	}
 	msg := GeneratePat(target)
-	ci.Session.ChannelMessageSend(ci.Event.ChannelID, msg)
+	_, err := ci.Session.ChannelMessageSend(ci.Event.ChannelID, msg)
+	if err != nil {
+		util.ReportThreadError(false, err)
+	}
 	return true
 }
