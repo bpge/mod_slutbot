@@ -11,11 +11,11 @@ func (vc *SpankmeCommand) GetNames() []string {
 	return []string{"spankme"}
 }
 
-func (vc *SpankmeCommand) Invoke(ci *shodan.CommandInvocation) bool {
+func (vc *SpankmeCommand) Invoke(ci *shodan.CommandInvocation) error {
 	msg := GenerateSpank("<@" + ci.Event.Author.ID + ">")
-	_, err := ci.Session.ChannelMessageSend(ci.Event.ChannelID, msg)
+	err := ci.Helpers.Reply(msg)
 	if err != nil {
-		util.ReportThreadError(false, err)
+		return util.WrapError(err)
 	}
-	return true
+	return nil
 }

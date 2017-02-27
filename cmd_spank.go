@@ -11,18 +11,20 @@ func (vc *SpankCommand) GetNames() []string {
 	return []string{"spank"}
 }
 
-func (vc *SpankCommand) Invoke(ci *shodan.CommandInvocation) bool {
+func (vc *SpankCommand) Invoke(ci *shodan.CommandInvocation) error {
 	var target string
 	if len(ci.Arguments) > 0 {
 		target = ci.Arguments[0]
 	} else {
-		ci.Session.ChannelMessageSend(ci.Event.ChannelID, "Shodan tired. Shodan sleep. :shodan:")
-		return true
+		err := ci.Helpers.Reply("Shodan tired. Shodan sleep. :shodan:")
+		if err != nil {
+			return util.WrapError(err)
+		}
 	}
 	msg := GenerateSpank(target)
-	_, err := ci.Session.ChannelMessageSend(ci.Event.ChannelID, msg)
+	err := ci.Helpers.Reply(msg)
 	if err != nil {
-		util.ReportThreadError(false, err)
+		return util.WrapError(err)
 	}
-	return true
+	return nil
 }
